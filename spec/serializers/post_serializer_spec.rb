@@ -5,6 +5,9 @@ RSpec.describe PostSerializer, type: :serializer do
 
   describe 'serialized' do
     let(:post) { build :post }
-    it { expect(subject.new(post).to_hash).to eq(title: post.title, content: post.content, author_ip: post.author_ip) }
+    it do
+      expect(subject.new(post).to_hash)
+        .to eq(id: post.id, title: post.title, content: post.content, author_ip: post.author_ip)
+    end
   end
 end
