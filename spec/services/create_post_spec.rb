@@ -4,7 +4,6 @@ RSpec.describe CreatePost, type: :service do
   subject { CreatePost }
 
   describe '.call' do
-    let(:user) { User.create(login: 'TestLogin') } # no need to use FactoryBot for now
     let(:params) do
       {
         title:     'TestTitle',
@@ -15,6 +14,12 @@ RSpec.describe CreatePost, type: :service do
     end
 
     context 'when user exist' do
+      let(:user) { create :user }
+      before { params[:login] = user.login }
+
+      it 'does not change amount of users' do
+        expect { subject.new(params).call }.not_to change { User.count }
+      end
       it 'create post' do
         expect { subject.new(params).call }.to change { Post.count }.from(0).to(1)
       end

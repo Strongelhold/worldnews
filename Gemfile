@@ -13,7 +13,11 @@ gem 'pg', '>= 0.18', '< 2.0'
 # Use Puma as the app server
 gem 'puma', '~> 3.7'
 
+gem 'active_model_serializers'
+
 group :development, :test do
+  gem 'factory_bot_rails'
+  gem 'faker'
   gem 'pry-rails'
 end
 
