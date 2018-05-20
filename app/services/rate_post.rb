@@ -7,7 +7,11 @@ class RatePost
   def call
     validate_rate_value
     validate_post_id
-    create_rating
+    ActiveRecord::Base.transaction do
+      ActiveRecord::Base.connection.execute('LOCK ratings IN ACCESS EXCLUSIVE MODE')
+      create_rating
+      calculate_average_rating
+    end
   end
 
   private
@@ -24,5 +28,9 @@ class RatePost
 
   def create_rating
     Rating.create(value: rate, post_id: post_id)
+  end
+
+  def calculate_average_rating
+    CalculateAveragePostRating.new(post_id).call
   end
 end

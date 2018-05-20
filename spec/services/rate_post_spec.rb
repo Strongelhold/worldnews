@@ -13,6 +13,10 @@ RSpec.describe RatePost, type: :service do
       expect(post.ratings.count).to be 1
     end
 
+    it 'returns average post rating' do
+      expect(subject.new(post.id, rate).call).to eq rate
+    end
+
     context 'when rate incorrect' do
       [-2, 0, 7].each do |rate|
         it 'returns error' do

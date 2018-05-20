@@ -16,7 +16,8 @@ class CalculateAveragePostRating
   end
 
   def calculate_average_rating
-    return 0 if post.ratings.count.zero?
-    post.ratings.pluck(:value).sum / post.ratings.count
+    ratings_count = post.ratings.count
+    return 0 if ratings_count.zero?
+    post.ratings.pluck(:value).sum / ratings_count
   end
 end
