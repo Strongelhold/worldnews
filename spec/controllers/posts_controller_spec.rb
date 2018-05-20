@@ -28,4 +28,14 @@ RSpec.describe PostsController, type: :controller do
       end
     end
   end
+
+  describe '#index' do
+    it do
+      create_list :post, 10, :with_ratings
+      get :index, params: { limit: 10 }
+      expect(response.status).to eq 200
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response[0].keys.sort).to eq ['content', 'title']
+    end
+  end
 end
