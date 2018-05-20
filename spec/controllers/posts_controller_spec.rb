@@ -13,9 +13,11 @@ RSpec.describe PostsController, type: :controller do
     it 'create post and return it' do
       post :create, params: params
       expect(response.status).to eq 200
-      expect(JSON.parse(response.body)).to eq('title' => post_obj.title,
-                                              'content' => post_obj.content,
-                                              'author_ip' => '0.0.0.0')
+      created_post = Post.last
+      expect(JSON.parse(response.body)).to eq('title' => created_post.title,
+                                              'content' => created_post.content,
+                                              'author_ip' => '0.0.0.0',
+                                              'id' => created_post.id)
     end
 
     context 'when validation failed' do
