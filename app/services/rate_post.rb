@@ -10,7 +10,9 @@ class RatePost
     ActiveRecord::Base.transaction do
       ActiveRecord::Base.connection.execute('LOCK ratings IN ACCESS EXCLUSIVE MODE')
       create_rating
-      calculate_average_rating
+      average_rating = calculate_average_rating
+      add_average_rating_to_post(average_rating)
+      average_rating
     end
   end
 
@@ -32,5 +34,9 @@ class RatePost
 
   def calculate_average_rating
     CalculateAveragePostRating.new(post_id).call
+  end
+
+  def add_average_rating_to_post(average_rating)
+    Post.find(post_id).update(average_rating: average_rating)
   end
 end

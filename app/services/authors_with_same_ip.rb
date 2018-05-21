@@ -9,18 +9,13 @@ class AuthorsWithSameIp
 
   def same_ip_authors
     sql = <<-SQL
-      SELECT posts.author_ip,
-        users.login
-      FROM posts
-        JOIN users
-        ON (posts.user_id = users.id)
-      WHERE posts.author_ip IN
+      SELECT p.author_ip, p.user_login
+      FROM posts as p
+      WHERE p.author_ip IN
         (SELECT posts.author_ip
-         FROM users
-           JOIN posts
-           ON (posts.user_id = users.id)
+         FROM posts
          GROUP BY author_ip
-         HAVING COUNT(distinct users.id) > 1)
+         HAVING COUNT(DISTINCT posts.id) > 1)
     SQL
     ActiveRecord::Base.connection.execute(sql).values
   end

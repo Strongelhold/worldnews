@@ -12,6 +12,6 @@ if Rails.env.development?
       author_ip: ips.sample
     }
     post = CreatePost.new(params).call
-    RatePost.new(post.id, Faker::Number.between(1, 5)).call if index % 10 == 0
+    3.times { RatePost.new(post.id, Faker::Number.between(1, 5)).call } if index % 10 == 0
   end
 end

@@ -11,6 +11,7 @@ RSpec.describe RatePost, type: :service do
     it 'associate rating to post' do
       subject.new(post.id, rate).call
       expect(post.ratings.count).to be 1
+      expect(post.reload.average_rating).to be rate
     end
 
     it 'returns average post rating' do

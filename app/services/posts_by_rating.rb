@@ -4,6 +4,6 @@ class PostsByRating
   end
 
   def call
-    Post.group('posts.id').joins(:ratings).order('AVG(ratings.value) DESC').limit(@limit)
+    Post.order(average_rating: :desc).limit(@limit)
   end
 end

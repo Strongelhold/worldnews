@@ -29,6 +29,6 @@ class CreatePost
   end
 
   def create_post
-    Post.create(params.except(:login).merge(user_id: user.id))
+    Post.create(params.except(:login).merge(user_id: user.id, user_login: user.login))
   end
 end
