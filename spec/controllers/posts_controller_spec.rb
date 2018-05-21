@@ -38,4 +38,16 @@ RSpec.describe PostsController, type: :controller do
       expect(parsed_response[0].keys.sort).to eq ['content', 'title']
     end
   end
+
+  describe '#authors_with_same_ip' do
+    it do
+      authors_posts = create_list :post, 5, author_ip: '192.168.0.231'
+      control_sample = [{ authors_posts[0][:author_ip] => authors_posts.map { |post| post.user.login } }]
+
+      get :authors_with_same_ip
+      parsed_response = JSON.parse(response.body)
+      expect(response.status).to eq 200
+      expect(parsed_response).to eq control_sample
+    end
+  end
 end

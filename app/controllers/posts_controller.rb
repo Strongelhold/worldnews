@@ -11,6 +11,11 @@ class PostsController < ApplicationController
     render json: { error: error.message }, status: 422
   end
 
+  def authors_with_same_ip
+    result = AuthorsWithSameIp.new.call
+    render json: result
+  end
+
   private
 
   def index_params
