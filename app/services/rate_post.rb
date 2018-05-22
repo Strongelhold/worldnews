@@ -8,17 +8,18 @@ class RatePost
     validate_rate_value
     validate_post_id
     ActiveRecord::Base.transaction do
-      ActiveRecord::Base.connection.execute('LOCK ratings IN ACCESS EXCLUSIVE MODE')
-      create_rating
-      average_rating = calculate_average_rating
-      add_average_rating_to_post(average_rating)
-      average_rating
+      post.with_lock do
+        create_rating
+        average_rating = calculate_average_rating
+        add_average_rating_to_post(average_rating)
+        average_rating
+      end
     end
   end
 
   private
 
-  attr_reader :post_id, :rate
+  attr_reader :post_id, :rate, :post
 
   def validate_rate_value
     raise RatingValidationError, RatingValidationError::VALUE if rate.to_i < 1 || rate.to_i > 5
@@ -36,7 +37,11 @@ class RatePost
     CalculateAveragePostRating.new(post_id).call
   end
 
+  def post
+    @post ||= Post.find(post_id)
+  end
+
   def add_average_rating_to_post(average_rating)
-    Post.find(post_id).update(average_rating: average_rating)
+    post.update(average_rating: average_rating)
   end
 end
