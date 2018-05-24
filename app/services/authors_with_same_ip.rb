@@ -1,4 +1,8 @@
 class AuthorsWithSameIp
+  def initialize(limit = nil)
+    @limit = limit.to_i
+  end
+
   def call
     same_ip_authors
       .group_by { |r| r[0] }
@@ -17,6 +21,7 @@ class AuthorsWithSameIp
          GROUP BY author_ip
          HAVING COUNT(DISTINCT posts.id) > 1)
     SQL
+    sql << " LIMIT #{@limit}" if @limit.positive?
     ActiveRecord::Base.connection.execute(sql).values
   end
 end

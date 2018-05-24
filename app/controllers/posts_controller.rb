@@ -12,7 +12,9 @@ class PostsController < ApplicationController
   end
 
   def authors_with_same_ip
-    result = AuthorsWithSameIp.new.call
+    result = Rails.cache.fetch('authors_with_same_ip', expires_in: 1.hour) do
+      AuthorsWithSameIp.new(same_ip_params[:limit]).call
+    end
     render json: result
   end
 
@@ -24,5 +26,9 @@ class PostsController < ApplicationController
 
   def create_params
     params.permit(:title, :content, :login, :author_ip)
+  end
+
+  def same_ip_params
+    params.permit(:limit)
   end
 end
